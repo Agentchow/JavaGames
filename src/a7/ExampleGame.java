@@ -26,8 +26,6 @@ public class ExampleGame {
 		
 		ExampleWidget ttt = new ExampleWidget();
 		top_panel.add(ttt, BorderLayout.CENTER);
-
-
 		/* Pack main frame and make visible. */
 		
 		main_frame.pack();

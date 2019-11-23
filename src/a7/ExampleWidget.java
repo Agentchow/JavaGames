@@ -60,13 +60,7 @@ public class ExampleWidget extends JPanel implements ActionListener, SpotListene
 		resetGame();
 	}
 
-	/* resetGame
-	 * 
-	 * Resets the game by clearing all the spots on the board,
-	 * picking a new secret spot, resetting game status fields, 
-	 * and displaying start message.
-	 * 
-	 */
+
 
 	private void resetGame() {
 		/* Clear all spots on board. Uses the fact that SpotBoard
