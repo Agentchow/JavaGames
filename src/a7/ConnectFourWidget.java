@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -17,6 +18,8 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
     private Player _nextToPlay;
     private int _x;
     private int _y;
+    
+    private ArrayList<Spot> _holder;
 
     public ConnectFourWidget() {
 
@@ -43,7 +46,10 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
 
         // Add ourselves as spot listener for all spots on the spot board
         _board.addSpotListener(this);
-
+        
+        //Initialize winning spots 
+        this._holder = new ArrayList<Spot>();
+        
         // Reset game
         resetGame();
     }
@@ -54,6 +60,8 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
             s.clearSpot();
             
             s.setSpotColor(s.getBackground());
+            
+            s.unhighlightSpot();
         }
 
         // Reset gameWon and nextToPlay fields
@@ -151,6 +159,12 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
         }
 
         if (_gameWon) {
+        	for(Spot i: _board) {
+                i.unhighlightSpot();
+        	}
+        	for (Spot i: _holder) {
+        		i.highlightSpot();
+        	}
             _message.setText(playerName + " got four in a row. Game over.");
             
         } else if (isFull && !_gameWon) {
@@ -172,17 +186,16 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
                     }
                     counter += 1;
                 }
+                
                 if (four) {
-                	for (int i=0; i<4; i++) {
-                    	_board.getSpotAt(x+i, y).highlightSpot();
-                	}
                 	
-                	for (int i=1; i < 6; i++) {
-                        _board.getSpotAt(x, y-i).unhighlightSpot();
-
+                	//need to fix
+                	for (int i=0; i<4; i++) {
+                    	_holder.add(_board.getSpotAt(x+i, y));
                 	}
                     return true;
                 }
+                
             }
         }
         return false;
