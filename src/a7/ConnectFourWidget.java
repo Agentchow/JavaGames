@@ -190,9 +190,9 @@ public class ConnectFourWidget extends JPanel implements ActionListener, SpotLis
                 if (four) {
                 	
                 	//need to fix
-                	for (int i=0; i<4; i++) {
-                    	_holder.add(_board.getSpotAt(x+i, y));
-                	}
+//                	for (int i=0; i<4; i++) {
+//                    	_holder.add(_board.getSpotAt(x+i, y));
+//                	}
                     return true;
                 }
                 

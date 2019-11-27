@@ -55,7 +55,7 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
         for (int col = 0; col < _board.getSpotWidth(); col++) {
             for (int row = 0; row < _board.getSpotHeight(); row++) {
                 if (col == (_board.getSpotWidth() / 2 - 1) &&
-                        row == (_board.getSpotHeight() / 2 - 1)) {
+                    row == (_board.getSpotHeight() / 2 - 1)) {
                     _board.getSpotAt(col, row).setSpotColor(Color.WHITE);
                     _board.getSpotAt(col, row).toggleSpot();
                 }
@@ -108,6 +108,7 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
             return;
         }
 
+        // Change players if valid spot exists
         if (_nextToPlay == Player.WHITE) {
             playerColor = Color.WHITE;
             playerName = "White";
@@ -120,14 +121,10 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
             _nextToPlay = Player.WHITE;
         }
 
-        boolean canMove = canMove();
-
-        // Set color of spot clicked and toggle
-        if (spot.isEmpty() && canMove) {
+        // Set color of valid spot clicked and toggle
+        if (spot.isEmpty() && isValidBoolean(spot)) {
             spot.setSpotColor(playerColor);
             spot.toggleSpot();
-        } else {
-            return;
         }
 
         // Flip spots
@@ -240,17 +237,20 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
             }
         }
 
-
-        boolean isFull = true;
-        for (int i = 0; i < _board.getSpotWidth(); i++) {
-            for (int j = 0; j < _board.getSpotHeight(); j++) {
-                if (_board.getSpotAt(i, j).isEmpty()) {
-                    isFull = false;
-                }
+        if (!canMove()) {
+            if (_nextToPlay == Player.WHITE) {
+                playerColor = Color.WHITE;
+                playerName = "White";
+                nextPlayerName = "Black";
+                _nextToPlay = Player.BLACK;
+            } else {
+                playerColor = Color.BLACK;
+                playerName = "Black";
+                nextPlayerName = "White";
+                _nextToPlay = Player.WHITE;
             }
         }
-
-        if (isFull || !canMove) {
+        if (!canMove()) {
             int black = 0;
             int white = 0;
             _gameWon = true;
@@ -264,11 +264,43 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
                 }
             }
             if (black > white) {
-                _message.setText("Black won: " + black + " to " + white);
+                _message.setText("Black won. Score: " + black + " to " + white);
             } else if (white > black) {
-                _message.setText("White won: " + white + " to " + black);
+                _message.setText("White won. Score:  " + white + " to " + black);
             } else {
-                _message.setText("Draw: " + black + " to " + white);
+                _message.setText("Draw. Score: " + black + " to " + white);
+            }
+            return;
+        }
+
+        // Check to see if board is full
+        boolean isFull = true;
+        for (int i = 0; i < _board.getSpotWidth(); i++) {
+            for (int j = 0; j < _board.getSpotHeight(); j++) {
+                if (_board.getSpotAt(i, j).isEmpty()) {
+                    isFull = false;
+                }
+            }
+        }
+        if (isFull) {
+            int black = 0;
+            int white = 0;
+            _gameWon = true;
+            for (int i = 0; i < _board.getSpotWidth(); i++) {
+                for (int j = 0; j < _board.getSpotHeight(); j++) {
+                    if (_board.getSpotAt(i, j).getSpotColor() == Color.BLACK) {
+                        black++;
+                    } else if (_board.getSpotAt(i, j).getSpotColor() == Color.WHITE) {
+                        white++;
+                    }
+                }
+            }
+            if (black > white) {
+                _message.setText("Black won. Score: " + black + " to " + white);
+            } else if (white > black) {
+                _message.setText("White won. Score:  " + white + " to " + black);
+            } else {
+                _message.setText("Draw. Score: " + black + " to " + white);
             }
         } else {
             _message.setText(nextPlayerName + " to play.");
@@ -316,7 +348,7 @@ public class OthelloWidget extends JPanel implements ActionListener, SpotListene
     public boolean canMove() {
         for (int i = 0; i < _board.getSpotWidth(); i++) {
             for (int j = 0; j < _board.getSpotHeight(); j++) {
-                if (isValidBoolean(_board.getSpotAt(i, j))) {
+                if (isValidBoolean(_board.getSpotAt(i, j)) && _board.getSpotAt(i, j).isEmpty()) {
                     return true;
                 }
             }
